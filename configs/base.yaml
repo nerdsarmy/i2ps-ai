@@ -1,0 +1,18 @@
+project:
+  name: i2ps-ai
+  stage: bootstrap
+
+model:
+  provider: open-weight
+  name: null
+  precision: auto
+  context_length: null
+
+runtime:
+  backend: null
+  device: auto
+
+generation:
+  temperature: 0.7
+  top_p: 0.9
+  max_new_tokens: 512
