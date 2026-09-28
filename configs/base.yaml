@@ -3,13 +3,22 @@ project:
   stage: bootstrap
 
 model:
-  provider: open-weight
-  name: null
-  precision: auto
+  strategy: multi-model
+  primary: Qwen3-8B
+  quantization: null
   context_length: null
+  alternates:
+    - Qwen3-14B
+    - Mistral-3-8B
+    - Gemma-3-4B
+    - Gemma-3-12B
 
 runtime:
-  backend: null
+  primary: llama.cpp
+  interface: openai-compatible
+  optional:
+    - ollama
+    - vllm
   device: auto
 
 generation:

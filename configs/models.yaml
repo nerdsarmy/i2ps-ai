@@ -1,0 +1,56 @@
+# I2PS AI model registry
+#
+# "enabled" means the model is approved for benchmarking/use by the project.
+# It does not mean the model is currently downloaded or loaded into memory.
+
+models:
+  qwen3_8b:
+    family: Qwen3
+    parameters: 8B
+    role: primary
+    enabled: true
+    preferred_format: GGUF
+    runtime: llama.cpp
+    quantization: null
+    notes: First baseline. Quantization selected after ProLiant hardware inventory.
+
+  qwen3_14b:
+    family: Qwen3
+    parameters: 14B
+    role: candidate
+    enabled: true
+    preferred_format: GGUF
+    runtime: llama.cpp
+    quantization: null
+    notes: Benchmark if available memory makes it practical.
+
+  mistral3_8b:
+    family: Mistral 3
+    parameters: 8B
+    role: candidate
+    enabled: true
+    preferred_format: GGUF
+    runtime: llama.cpp
+    quantization: null
+
+  gemma3_4b:
+    family: Gemma 3
+    parameters: 4B
+    role: compact_multimodal_candidate
+    enabled: true
+    preferred_format: GGUF
+    runtime: llama.cpp
+    quantization: null
+
+  gemma3_12b:
+    family: Gemma 3
+    parameters: 12B
+    role: multimodal_candidate
+    enabled: true
+    preferred_format: GGUF
+    runtime: llama.cpp
+    quantization: null
+
+routing:
+  mode: manual_then_benchmark_driven
+  simultaneous_loading_required: false
