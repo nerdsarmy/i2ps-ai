@@ -1,2 +1,2 @@
-# -i2ps-ai
+# i2ps-ai
 Ai project 
