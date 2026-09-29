@@ -17,7 +17,7 @@
 
 ## Phase 1 — Kubernetes foundation
 
-- [ ] Prepare ProLiant control-plane host
+- [ ] Prepare Dell Precision T5810 control-plane/AI host
 - [ ] Install full Kubernetes control plane
 - [ ] Join Linux worker nodes
 - [ ] Configure container runtime
@@ -28,7 +28,7 @@
 
 ## Phase 2 — Storage platform
 
-- [ ] Inventory 500 GB+ local disks on each node
+- [ ] Inventory 500 GB+ local disks on each Linux worker and retained storage nodes
 - [ ] Select Kubernetes persistent-storage layer
 - [ ] Configure local/offline persistent volumes
 - [ ] Define replication and failure policy
@@ -68,7 +68,7 @@
 
 - [ ] Add monitoring
 - [ ] Add authentication and access control
-- [ ] Configure OCI connectivity
+- [ ] Configure OCI connectivity, with ProLiant acting as dedicated storage/cloud gateway if retained
 - [ ] Add backup and disaster-recovery workflows
 - [ ] Test node failure and workload relocation
 - [ ] Test cloud-assisted recovery

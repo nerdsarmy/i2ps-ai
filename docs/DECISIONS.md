@@ -99,3 +99,31 @@ Kubernetes resource policy must prioritize business services and I2PS AI above b
 ### Consequence
 
 I2PS AI is no longer designed as a single-server application. It is a Kubernetes-managed service within a distributed hybrid platform spanning the local Linux cluster and Oracle Cloud.
+
+
+## ADR-0004 — T5810 becomes primary Kubernetes/AI host; ProLiant reduced to storage/cloud role
+
+**Status:** Accepted  
+**Date:** 2026-09-29
+
+### Decision
+
+If the Dell Precision T5810 is acquired, it becomes the primary Kubernetes control-plane host and primary AI worker.
+
+The HP ProLiant is removed from Kubernetes control-plane and AI duties. If retained, it is dedicated to cloud/storage functions only, including remote file access, local storage services, backup/synchronization, and Oracle Cloud integration.
+
+### Reason
+
+The T5810 is the more suitable host for compute-intensive AI and orchestration workloads. Keeping the ProLiant focused on storage/cloud duties isolates those services from AI load and simplifies its operational role.
+
+### Consequence
+
+The platform roles become:
+
+- Mac controller: administration
+- Dell Precision T5810: Kubernetes control plane + primary AI worker
+- Linux worker fleet: additional Kubernetes compute/storage workers
+- HP ProLiant: dedicated storage/cloud gateway if retained
+- Oracle Cloud Infrastructure: off-site/cloud extension
+
+The ProLiant is no longer a required part of the AI compute path.

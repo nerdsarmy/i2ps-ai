@@ -6,10 +6,12 @@ I2PS AI runs as part of the wider I2PS distributed platform.
 
 - **Full Kubernetes** provides orchestration, scheduling, health management, service discovery, policy, and workload placement.
 - **Docker-compatible OCI images** are the packaging format for workloads.
-- **HP ProLiant / Worker 11** is the primary on-prem server and Kubernetes control-plane host.
-- **Linux worker nodes** provide compute and local storage.
+- **Dell Precision T5810** is the primary on-prem Kubernetes control-plane host and primary AI worker.
+- **Linux worker nodes** provide additional compute and local storage.
+- **HP ProLiant / Worker 11**, if retained, is dedicated to cloud/storage duties only: remote file access, storage services, backup/synchronization, and Oracle Cloud integration. It is not the Kubernetes control plane and is not an AI inference node.
 - **Oracle Cloud Infrastructure (OCI)** extends the platform into the cloud for storage, backup, networking, recovery, and cloud-executed workloads.
 - **Mac controller** remains the administrative workstation used to manage the platform over SSH and Kubernetes tooling.
+- The ProLiant may remain outside the Kubernetes compute path entirely so storage/cloud duties stay isolated from AI and orchestration load.
 
 ## Workload priority
 
