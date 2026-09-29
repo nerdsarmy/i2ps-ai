@@ -66,3 +66,36 @@ Normally only the selected model(s) required for a workload should be resident i
 ### Consequence
 
 I2PS AI becomes model-portable. We can benchmark, replace, specialize, or route between models without redesigning the application.
+
+
+## ADR-0003 — Full Kubernetes and hybrid on-prem/OCI platform
+
+**Status:** Accepted  
+**Date:** 2026-09-28
+
+### Decision
+
+Use full upstream Kubernetes rather than K3s for the I2PS platform.
+
+The HP ProLiant is the primary on-prem server/control-plane host. Existing Linux machines join as Kubernetes worker nodes and contribute compute and storage.
+
+Docker-compatible OCI images are the standard packaging format. Kubernetes is the orchestration layer.
+
+Oracle Cloud Infrastructure extends the local cluster with cloud storage, backup, networking, recovery, and cloud-executed workloads.
+
+### Storage strategy
+
+Use two coordinated storage tiers:
+
+1. **Local/offline tier** built from the disks already installed across the Linux cluster.
+2. **OCI cloud tier** for off-site backup, object storage, archive, recovery, and selected cloud workloads.
+
+The system must continue supporting useful local operation without dependence on OCI connectivity.
+
+### Resource priority
+
+Kubernetes resource policy must prioritize business services and I2PS AI above background compute. Mining remains a subordinate workload that uses spare capacity only.
+
+### Consequence
+
+I2PS AI is no longer designed as a single-server application. It is a Kubernetes-managed service within a distributed hybrid platform spanning the local Linux cluster and Oracle Cloud.

@@ -6,37 +6,69 @@
 - [x] Establish repository structure
 - [x] Add Git safety rules for weights and secrets
 - [x] Document initial architecture
-- [ ] Inventory target hardware
-- [ ] Record first architecture decision
+- [x] Choose multi-model strategy
+- [x] Choose Qwen3-8B as first AI baseline
+- [x] Choose llama.cpp as first inference runtime
+- [x] Choose full Kubernetes as orchestration platform
+- [x] Define hybrid local + Oracle Cloud architecture
+- [ ] Inventory all Kubernetes nodes
+- [ ] Inventory local disks and usable storage
+- [ ] Record network topology and link speeds
 
-## Phase 1 — Hardware and model selection
+## Phase 1 — Kubernetes foundation
 
-- [ ] Inventory CPU, RAM, GPU/VRAM, disk, and OS
+- [ ] Prepare ProLiant control-plane host
+- [ ] Install full Kubernetes control plane
+- [ ] Join Linux worker nodes
+- [ ] Configure container runtime
+- [ ] Configure cluster networking
+- [ ] Configure namespaces, quotas, priorities, and node labels
+- [ ] Reserve resources for business/AI workloads
+- [ ] Place mining/background compute at lowest priority
+
+## Phase 2 — Storage platform
+
+- [ ] Inventory 500 GB+ local disks on each node
+- [ ] Select Kubernetes persistent-storage layer
+- [ ] Configure local/offline persistent volumes
+- [ ] Define replication and failure policy
+- [ ] Integrate OCI object/archive storage
+- [ ] Configure local-to-cloud backup policy
+- [ ] Test offline operation
+- [ ] Test restore from OCI
+
+## Phase 3 — Hardware and model benchmarking
+
+- [ ] Inventory CPU, RAM, GPU/VRAM, disk, and OS by node
 - [ ] Define realistic target model sizes
-- [ ] Shortlist current open-weight models
-- [ ] Review licenses
-- [ ] Benchmark inference candidates
-- [ ] Select first base model
+- [ ] Benchmark Qwen3-8B
+- [ ] Benchmark alternate models
+- [ ] Select quantization by node class
+- [ ] Measure tokens/sec, memory, power, and network overhead
 
-## Phase 2 — Local assistant
+## Phase 4 — I2PS AI services
 
-- [ ] Implement inference adapter
+- [ ] Package llama.cpp inference service as OCI container image
+- [ ] Deploy model service through Kubernetes
 - [ ] Add prompt/system configuration
 - [ ] Add local knowledge retrieval
+- [ ] Add vector/index storage
 - [ ] Add conversation/session layer
 - [ ] Add evaluation harness
+- [ ] Add model routing
 
-## Phase 3 — Adaptation
+## Phase 5 — Adaptation
 
 - [ ] Curate training and evaluation data
-- [ ] Run LoRA/QLoRA experiment if hardware permits
+- [ ] Run LoRA/QLoRA experiments if hardware permits
 - [ ] Evaluate against baseline
 - [ ] Document results and regressions
 
-## Phase 4 — Serving
+## Phase 6 — Hybrid operations
 
-- [ ] Package model runtime
-- [ ] Add API
-- [ ] Add authentication
 - [ ] Add monitoring
-- [ ] Define deployment/update process
+- [ ] Add authentication and access control
+- [ ] Configure OCI connectivity
+- [ ] Add backup and disaster-recovery workflows
+- [ ] Test node failure and workload relocation
+- [ ] Test cloud-assisted recovery

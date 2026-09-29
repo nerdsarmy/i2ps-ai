@@ -1,38 +1,116 @@
-# I2PS AI — Initial Architecture
+# I2PS AI — Platform Architecture
 
-## Principle
+## Core platform
 
-The project does not assume a specific foundation model at bootstrap. The first model will be selected after hardware measurement, license review, and benchmarking.
+I2PS AI runs as part of the wider I2PS distributed platform.
 
-## Layers
+- **Full Kubernetes** provides orchestration, scheduling, health management, service discovery, policy, and workload placement.
+- **Docker-compatible OCI images** are the packaging format for workloads.
+- **HP ProLiant / Worker 11** is the primary on-prem server and Kubernetes control-plane host.
+- **Linux worker nodes** provide compute and local storage.
+- **Oracle Cloud Infrastructure (OCI)** extends the platform into the cloud for storage, backup, networking, recovery, and cloud-executed workloads.
+- **Mac controller** remains the administrative workstation used to manage the platform over SSH and Kubernetes tooling.
 
-### 1. Foundation model
+## Workload priority
 
-An open-weight model selected after benchmarking and license review.
+1. Business-critical services
+2. I2PS AI and internal platform services
+3. Storage, backup, monitoring, and maintenance services
+4. Background compute such as mining
 
-### 2. Runtime
+Background workloads must yield CPU, RAM, storage I/O, and network capacity whenever higher-priority services need them.
 
-A local inference engine selected according to CPU/GPU hardware, memory limits, operating system, and model format.
+## AI architecture
 
-### 3. Knowledge layer
+### Model layer
 
-I2PS-specific documents and structured knowledge should initially be added through retrieval rather than baked into model weights. This keeps knowledge auditable and updateable.
+I2PS AI supports multiple interchangeable open-weight models.
 
-### 4. Evaluation
+Primary baseline:
+- Qwen3-8B
 
-A repeatable evaluation suite will measure at minimum:
+Additional candidates:
+- Qwen3-14B
+- Mistral 3 8B
+- Gemma 3 4B
+- Gemma 3 12B
 
-- correctness
-- instruction following
-- hallucination rate
-- domain knowledge
-- latency
-- memory consumption
-- tokens per second
+Models are selected and routed by workload rather than permanently hard-coded into the application.
 
-### 5. Adaptation
+### Runtime layer
 
-Fine-tuning, LoRA/QLoRA, preference optimization, or other alignment techniques will be introduced only when evaluation demonstrates a specific limitation that adaptation can address.
+The initial inference runtime is **llama.cpp** using GGUF models.
+
+Other runtimes may be introduced where useful:
+- Ollama for simplified model management
+- vLLM for future accelerator-backed high-throughput serving
+
+### Scheduling model
+
+Kubernetes schedules AI services onto suitable nodes according to CPU, RAM, accelerator availability, storage locality, health, and workload priority.
+
+Most inference workloads should run as independent model services or replicas. Experimental cross-node model splitting may be tested separately where justified by hardware and network performance.
+
+## Hybrid storage architecture
+
+The Linux cluster contains substantial local disk capacity. Each node's local disks remain individually addressable but are incorporated into a managed storage layer.
+
+### Local / offline tier
+
+Purpose:
+- model files
+- local datasets
+- vector indexes
+- application state
+- caches
+- snapshots
+- private documents
+- offline operation when Internet/cloud access is unavailable
+
+The storage layer must preserve node-local awareness while presenting persistent storage to Kubernetes workloads.
+
+### Cloud tier — Oracle Cloud Infrastructure
+
+OCI provides the off-site/cloud tier for:
+- object storage
+- backup copies
+- archival storage
+- disaster recovery
+- workload recovery
+- cloud execution when required
+- secure connectivity between on-prem and cloud resources
+
+Cloud storage is an extension of the local platform, not a replacement for local storage.
+
+### Data policy
+
+Data must be classified before cloud synchronization.
+
+- public/non-sensitive data may be synchronized normally
+- internal/private data requires controlled access and encryption
+- secrets and credentials must not be stored in Git
+- selected workloads must remain capable of operating entirely offline
+
+## Knowledge layer
+
+I2PS-specific information should initially be supplied through retrieval and structured data rather than permanently embedded into model weights.
+
+This supports:
+- auditable knowledge
+- rapid updates
+- local-only private knowledge
+- separate cloud and offline data policies
+
+## Resilience
+
+The target platform supports:
+- local execution without cloud dependency
+- replicated services
+- persistent storage
+- node failure recovery
+- backup to OCI
+- workload relocation between eligible nodes
+- later cloud failover for selected services
 
 ## External research
 
