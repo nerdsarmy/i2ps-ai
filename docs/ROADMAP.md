@@ -17,7 +17,8 @@
 
 ## Phase 1 — Kubernetes foundation
 
-- [ ] Prepare Dell Precision T5810 control-plane/AI host
+- [ ] Prepare Dell Precision T5810 primary control-plane/AI host
+- [ ] Prepare ProLiant Oracle/storage gateway and warm-standby host
 - [ ] Install full Kubernetes control plane
 - [ ] Join Linux worker nodes
 - [ ] Configure container runtime
@@ -70,5 +71,8 @@
 - [ ] Add authentication and access control
 - [ ] Configure OCI connectivity, with ProLiant acting as dedicated storage/cloud gateway if retained
 - [ ] Add backup and disaster-recovery workflows
+- [ ] Back up Kubernetes state/configuration to ProLiant and OCI
+- [ ] Test Dell failure and ProLiant recovery procedure
 - [ ] Test node failure and workload relocation
+- [ ] Add third control-plane member when automatic HA is required
 - [ ] Test cloud-assisted recovery

@@ -8,10 +8,10 @@ I2PS AI runs as part of the wider I2PS distributed platform.
 - **Docker-compatible OCI images** are the packaging format for workloads.
 - **Dell Precision T5810** is the primary on-prem Kubernetes control-plane host and primary AI worker.
 - **Linux worker nodes** provide additional compute and local storage.
-- **HP ProLiant / Worker 11**, if retained, is dedicated to cloud/storage duties only: remote file access, storage services, backup/synchronization, and Oracle Cloud integration. It is not the Kubernetes control plane and is not an AI inference node.
+- **HP ProLiant / Worker 11** is the secondary/failover infrastructure host. During normal operation it handles Oracle Cloud integration, remote file access, storage services, backup/synchronization, and recovery data. If the Dell T5810 becomes unavailable, the ProLiant can assume fallback Kubernetes orchestration and essential platform services. It is not intended to match the Dell's normal AI compute capacity.
 - **Oracle Cloud Infrastructure (OCI)** extends the platform into the cloud for storage, backup, networking, recovery, and cloud-executed workloads.
 - **Mac controller** remains the administrative workstation used to manage the platform over SSH and Kubernetes tooling.
-- The ProLiant may remain outside the Kubernetes compute path entirely so storage/cloud duties stay isolated from AI and orchestration load.
+- During normal operation the ProLiant stays out of the primary AI compute path so storage/cloud duties remain isolated. It maintains synchronized configuration, backups, and recovery material required for failover.
 
 ## Workload priority
 
@@ -121,3 +121,42 @@ Public Anthropic research, alignment datasets, and Constitutional AI material ma
 ## Repository policy
 
 Model weights, large datasets, private documents, generated checkpoints, secrets, tokens, and credentials must never be committed directly to Git.
+
+
+## Primary / redundancy topology
+
+Normal operation:
+
+```text
+Mac Controller
+      |
+      v
+Dell T5810 -------------------- ProLiant
+Primary Kubernetes             Oracle Cloud / storage gateway
+control plane + AI             backup + recovery + warm standby
+      |
+      v
+Linux Kubernetes worker fleet
+```
+
+Failure mode:
+
+```text
+Dell unavailable
+      |
+      v
+ProLiant
+Fallback Kubernetes orchestration
+Essential services + storage/cloud connectivity
+      |
+      v
+Linux worker fleet
+```
+
+The fallback objective is service continuity and recovery, not identical AI performance.
+
+### Control-plane availability
+
+A two-host Dell/ProLiant design provides a useful primary/standby recovery topology but is not treated as a full automatic quorum-based HA control plane. The target for automatic Kubernetes control-plane high availability is an odd-numbered quorum, normally three control-plane members. A third eligible node may be promoted later.
+
+Kubernetes state, cluster configuration, manifests, secrets backups, storage metadata, and recovery procedures must be backed up to the ProLiant and protected through the OCI backup tier as appropriate.

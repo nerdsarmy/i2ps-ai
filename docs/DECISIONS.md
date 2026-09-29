@@ -127,3 +127,40 @@ The platform roles become:
 - Oracle Cloud Infrastructure: off-site/cloud extension
 
 The ProLiant is no longer a required part of the AI compute path.
+
+
+## ADR-0005 — ProLiant as Dell failover host and Oracle Cloud gateway
+
+**Status:** Accepted  
+**Date:** 2026-09-29
+
+### Decision
+
+The Dell Precision T5810 remains the primary Kubernetes control-plane host and primary AI worker.
+
+The HP ProLiant has a dual infrastructure role:
+
+1. Oracle Cloud / remote-storage gateway during normal operation.
+2. Warm standby and recovery host for the Dell T5810.
+
+The ProLiant maintains synchronized cluster configuration, backups, recovery material, and the services required to restore or temporarily assume orchestration if the Dell fails.
+
+### Availability model
+
+The Dell/ProLiant pair is treated as primary/standby redundancy, not as a two-member automatic Kubernetes quorum.
+
+For true automatic control-plane high availability, the target topology is three control-plane members or another quorum-safe datastore design.
+
+### Failure behavior
+
+If the Dell is unavailable:
+
+- the ProLiant assumes fallback orchestration duties;
+- essential platform/storage/cloud services remain available where possible;
+- Linux workers remain usable;
+- AI workloads may be rescheduled to capable workers;
+- AI performance may be reduced because the ProLiant has substantially less memory/compute capacity than the primary AI host.
+
+### Consequence
+
+The ProLiant is retained as useful infrastructure even when the T5810 is present: it provides Oracle integration, remote storage, backup/recovery, and a recovery path for failure of the primary server.
